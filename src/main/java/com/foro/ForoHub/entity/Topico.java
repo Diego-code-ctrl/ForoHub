@@ -1,5 +1,6 @@
 package com.foro.ForoHub.entity;
 
+import com.foro.ForoHub.model.RegistroTopicos;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,4 +40,10 @@ public class Topico {
     @ManyToOne
     @JoinColumn(name = "curso_id")
     private Curso curso;
+    
+    public Topico(RegistroTopicos registroTopico){
+        this.mensaje = registroTopico.mensaje();
+        this.titulo = registroTopico.titulo();
+        this.fechaCreacion = registroTopico.fechaCreacion();
+    }
 }

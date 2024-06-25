@@ -1,5 +1,7 @@
 package com.foro.ForoHub.entity;
 
+import com.foro.ForoHub.model.RegistroCurso;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +32,11 @@ public class Curso {
     private String nombre;
     private String tipo;
     
-    @OneToMany
+    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Topico> topicos;
+    
+    public Curso(RegistroCurso registroCurso){
+        this.nombre = registroCurso.nombre();
+        this.tipo = registroCurso.tipo();
+    }
 }
