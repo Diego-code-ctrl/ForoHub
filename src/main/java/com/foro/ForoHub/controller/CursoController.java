@@ -3,17 +3,17 @@ package com.foro.ForoHub.controller;
 import com.foro.ForoHub.entity.Curso;
 import com.foro.ForoHub.model.RegistroCurso;
 import com.foro.ForoHub.repository.CursoRepository;
-import java.util.List;
-import java.util.Optional;
+import jakarta.transaction.Transactional;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -30,9 +30,9 @@ public class CursoController {
     
     @PostMapping("/agregarCurso")
     public ResponseEntity registrarCurso(@RequestBody RegistroCurso curso){
-        Optional<Curso> existeCurso = cursoRepository.findByNombre(curso.nombre());
+        Curso existeCurso = cursoRepository.findByNombre(curso.nombre());
         
-        if (existeCurso.isEmpty()) {
+        if (existeCurso == null) {
             cursoRepository.save(new Curso(curso));
             return ResponseEntity.ok(curso);
         } else{
@@ -41,17 +41,28 @@ public class CursoController {
     }
     
     @GetMapping("/listarCursos")
-    public List<Curso> listarCurosos(){
-        return cursoRepository.findAll();
+    public Stream<Curso> listarCurosos(){
+        return cursoRepository.findAll().stream().filter(curso -> curso.isActivo());
     }
     
     @PutMapping("/modificarCurso")
-    public void modificarCurso(@RequestBody RegistroCurso curso){
-        
+    @Transactional
+    public ResponseEntity actualizarCurso(@RequestBody RegistroCurso registroCurso){
+        Curso curso = cursoRepository.findByNombre(registroCurso.nombre());
+        if (curso == null) {
+            return ResponseEntity.ok("Registro no encontrado");
+        }
+        curso.actualizarDatos(registroCurso);
+        return ResponseEntity.ok("Registro actualizado");
     }
     
-    @DeleteMapping("/eliminarCurso")
-    public void eliminarCurso(@RequestParam String nombre){
-        
+    @DeleteMapping("/eliminarCurso/{id}")
+    @Transactional
+    public void eliminarCurso(@PathVariable Long id){
+        Curso curso = cursoRepository.getReferenceById(id);
+        if (curso == null) {
+            return;
+        }
+        curso.desactivarCurso();
     }
 }

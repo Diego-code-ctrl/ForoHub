@@ -6,6 +6,6 @@ import java.util.Date;
  *
  * @author diegobecerril
  */
-public record RegistroTopicos(String titulo, String mensaje, Date fechaCreacion) {
+public record RegistroTopicos(Long id, String titulo, String mensaje, Date fechaCreacion) {
 
 }

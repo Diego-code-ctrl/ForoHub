@@ -35,8 +35,23 @@ public class Curso {
     @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Topico> topicos;
     
+    private boolean activo;
+    
     public Curso(RegistroCurso registroCurso){
+        this.activo = true;
         this.nombre = registroCurso.nombre();
         this.tipo = registroCurso.tipo();
+    }
+    
+    public void actualizarDatos(RegistroCurso registroCurso){
+        if(registroCurso.nombre() != null)
+            this.nombre = registroCurso.nombre();
+        
+        if(registroCurso.tipo() != null)
+            this.tipo = registroCurso.tipo();
+    }
+
+    public void desactivarCurso() {
+        this.activo = false;
     }
 }

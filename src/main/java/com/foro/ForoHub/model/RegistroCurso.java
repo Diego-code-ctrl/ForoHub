@@ -4,6 +4,6 @@ package com.foro.ForoHub.model;
  *
  * @author diegobecerril
  */
-public record RegistroCurso(String nombre, String tipo, RegistroTopicos registroTopicos) {
+public record RegistroCurso(Long id, String nombre, String tipo, RegistroTopicos registroTopicos) {
     
 }

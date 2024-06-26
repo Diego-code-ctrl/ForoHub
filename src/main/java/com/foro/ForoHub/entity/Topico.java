@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "topicos")
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -41,9 +43,24 @@ public class Topico {
     @JoinColumn(name = "curso_id")
     private Curso curso;
     
+    private boolean activo;
+    
     public Topico(RegistroTopicos registroTopico){
+        this.activo = true; 
         this.mensaje = registroTopico.mensaje();
         this.titulo = registroTopico.titulo();
         this.fechaCreacion = registroTopico.fechaCreacion();
+    }
+    
+    public void actualizarTopico(RegistroTopicos registroTopico){
+        if (registroTopico.titulo() != null)
+            this.titulo = registroTopico.titulo();
+        
+        if (registroTopico.mensaje() != null)
+            this.mensaje = registroTopico.mensaje();
+    }
+    
+    public void desactivarTopico() {
+        this.activo = false;
     }
 }
